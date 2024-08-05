@@ -1,3 +1,10 @@
+using CleanArchitecture.Infrastructure.Presistence;
+using CleanArchitecture.Infrastructure.Presistence.Data;
+using CleanArchitecture.Services;
+using CleanArchitecute.Core.Entities;
+using CleanArchitecute.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +13,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer("Server = WALID\\MSSQLSERVER02; Database = Test; Trusted_Connection = True; TrustServerCertificate = True;"));
+
+builder.Services.AddScoped<ICarServices,CarServices>();
 
 var app = builder.Build();
 

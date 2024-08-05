@@ -10,18 +10,18 @@ namespace CleanArchitecture.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarServices _carServices;
-        private readonly IRepository<Car> _icarRepo;
+        
 
-        public CarController(ICarServices carServices, IRepository<Car> icarRepo)
+        public CarController(ICarServices carServices)
         {
             _carServices = carServices;
-            _icarRepo = icarRepo;
+            
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var carList = await _carServices.GetAll();
+            var carList = await _carServices.GetAllAsync();
             return Ok(carList);
         }
 
@@ -30,7 +30,7 @@ namespace CleanArchitecture.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetById([FromRoute] int id)
         {
-            var car = await _carServices.GetById(id);
+            var car = await _carServices.GetAsync(id);
             if (car == null)
             {
                return NotFound();
@@ -42,14 +42,13 @@ namespace CleanArchitecture.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Car carmodel)
         {
-            var car = await _carServices.Create(carmodel);
+            var car = await _carServices.CreateAsync(carmodel);
 
             if (car == null)
             {
                return BadRequest();
             }
-            await _icarRepo.SaveChangesAsync();
-
+            await _carServices.SaveAsync();
             return Ok(car);
         }
 
@@ -57,13 +56,13 @@ namespace CleanArchitecture.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var car = await _carServices.Delete(id);
+            var car = await _carServices.DeleteAsync(id);
             if(car == null)
             { 
                 return NotFound();
             }
 
-            await _icarRepo.SaveChangesAsync(); 
+            await _carServices.SaveAsync(); 
             return Ok(car);
         }
 
@@ -74,8 +73,8 @@ namespace CleanArchitecture.Controllers
             {
                 return BadRequest();
             }
-            _carServices.Update(carModel);
-            await _icarRepo.SaveChangesAsync();
+            await _carServices.UpdateAsync(carModel);
+            await _carServices.SaveAsync();
 
             return Ok(carModel);
         }

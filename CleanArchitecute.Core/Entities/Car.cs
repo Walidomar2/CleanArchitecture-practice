@@ -4,7 +4,8 @@ namespace CleanArchitecute.Core.Entities
 {
     public class Car
     {
-        int Id { get; set; }
+        
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; } = string.Empty;

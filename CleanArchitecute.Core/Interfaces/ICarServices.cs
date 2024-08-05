@@ -3,12 +3,10 @@ using CleanArchitecute.Core.Entities;
 
 namespace CleanArchitecute.Core.Interfaces
 {
-    public interface ICarServices
+    public interface ICarServices : IRepository<Car>
     {
-        Task<Car?> Create(Car car); 
-        Task<IEnumerable<Car>> GetAll();    
-        Task<Car?> GetById(int carId);
-        Task<Car?> Delete(int carId);
-        void Update(Car car);
+        public Task<int> SaveAsync();
+        public Task<Car?> UpdateAsync(Car car);
+
     }
 }

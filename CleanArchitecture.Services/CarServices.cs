@@ -1,40 +1,38 @@
-﻿using CleanArchitecute.Core.Entities;
+﻿using CleanArchitecture.Infrastructure.Presistence;
+using CleanArchitecture.Infrastructure.Presistence.Data;
+using CleanArchitecute.Core.Entities;
 using CleanArchitecute.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Services
 {
-    public class CarServices : ICarServices
+    public class CarServices : Repository<Car>, ICarServices
     {
-        private readonly IRepository<Car> _carRepo;
+        
+        private readonly ApplicationDbContext _context;
 
-        public CarServices(IRepository<Car> carRepo)
+        public CarServices(ApplicationDbContext context) : base(context) 
         {
-            _carRepo = carRepo;
+            _context = context; 
         }
 
-        public async Task<Car?> Create(Car car)
+        public async Task<int> SaveAsync()
         {
-            return await _carRepo.CreateAsync(car); 
+            return await _context.SaveChangesAsync();
         }
 
-        public async Task<Car?> Delete(int carId)
+        public async Task<Car?> UpdateAsync(Car car)
         {
-            return await _carRepo.DeleteAsync(carId);
-        }
+            var carModel = await _context.Cars.FirstOrDefaultAsync(c => c.Id == car.Id);
+            if (carModel == null)
+                return null;
 
-        public async Task<IEnumerable<Car>> GetAll()
-        {
-            return await _carRepo.GetAllAsync();   
-        }
+            carModel.Id = car.Id;
+            carModel.Name = car.Name;
+            carModel.Description = car.Description;
 
-        public async Task<Car?> GetById(int carId)
-        {
-            return await _carRepo.GetAsync(carId);
-        }
+            return car;
 
-        public void Update(Car car)
-        {
-            _carRepo.UpdateAsync(car);
         }
     }
 }

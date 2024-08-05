@@ -39,17 +39,7 @@ namespace CleanArchitecture.Infrastructure.Presistence
         public async Task<TEntity?> GetAsync(int id)
         {
             return await _entity.FindAsync(id);
-        }
-
-        public void UpdateAsync(TEntity entity)
-        {
-            _entity.Attach(entity);
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
-        }
+        }  
 
     }
 }
