@@ -2,10 +2,12 @@
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task<TEntity> CreateAsync(TEntity entity); 
-        Task<TEntity> GetAsync(int id);
+        Task<TEntity?> CreateAsync(TEntity entity); 
+        Task<TEntity?> GetAsync(int id);
         Task<IEnumerable<TEntity>> GetAllAsync();   
-        Task<TEntity> UpdateAsync(TEntity entity, int id);
-        Task<TEntity> DeleteAsync(int id);
+        void UpdateAsync(TEntity entity);
+        Task<TEntity?> DeleteAsync(int id);
+
+        Task<int> SaveChangesAsync();
     }
 }

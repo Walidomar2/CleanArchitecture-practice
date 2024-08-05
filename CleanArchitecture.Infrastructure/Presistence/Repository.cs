@@ -15,29 +15,41 @@ namespace CleanArchitecture.Infrastructure.Presistence
             _entity = _context.Set<TEntity>(); 
         }
 
-        public Task<TEntity> CreateAsync(TEntity entity)
+        public async Task<TEntity?> CreateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            await _entity.AddAsync(entity);
+            return entity;
         }
 
-        public Task<TEntity> DeleteAsync(int id)
+        public async Task<TEntity?> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var deletedModel = await _entity.FindAsync(id);
+            if (deletedModel != null)
+            {
+                _entity.Remove(deletedModel);
+            } 
+            return deletedModel;
         }
 
-        public Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _entity.ToListAsync();
         }
 
-        public Task<TEntity> GetAsync(int id)
+        public async Task<TEntity?> GetAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _entity.FindAsync(id);
         }
 
-        public Task<TEntity> UpdateAsync(TEntity entity, int id)
+        public void UpdateAsync(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entity.Attach(entity);
         }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
     }
 }
